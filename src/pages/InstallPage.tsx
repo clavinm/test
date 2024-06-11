@@ -10,7 +10,7 @@ import {
   handleBeforeInstallPrompt,
   handleAppInstalled,
   handleInstallClick,
-} from '../features/install/InstallPage';
+} from '../features/install/InstallPage'; // Ensure this path is correct
 
 const First = styled.div`
   background-color: lightgray;
@@ -41,7 +41,6 @@ const Welcome = styled.div`
 `;
 
 const Second = styled.div`
-  margin-top: 100px;
   margin-top: 40px;
   text-align: center;
 `;
@@ -57,12 +56,12 @@ const InstallPage = () => {
   const [showInstallPrompt, setShowInstallPrompt] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
   const [isInstallButtonClicked, setIsInstallButtonClicked] = useState(false);
+console.log(showLogin);
 
   const navigate = useNavigate();
   const [deferredPrompt, setDeferredPrompt] = useState<DeferredPrompt | null>(
     null
   );
-  console.log(showLogin);
 
   useEffect(() => {
     const beforeInstallPromptHandler = (e: Event) =>
@@ -81,10 +80,11 @@ const InstallPage = () => {
       window.removeEventListener('appinstalled', appInstalledHandler);
     };
   }, []);
+
   const handleLogin = () => {
     navigate({ to: '/appointments' });
   };
-  //showLogin
+
   return (
     <>
       <First>
@@ -96,8 +96,8 @@ const InstallPage = () => {
           <>
             <LoadingButton
               variant="outlined"
-              // loading={isInstallButtonClicked}
-              // loadingIndicator="Loading…"
+              loading={isInstallButtonClicked}
+              loadingIndicator="Loading…"
               sx={{
                 color: isInstallButtonClicked ? 'black' : 'white',
                 backgroundColor: isInstallButtonClicked ? 'white' : 'black',
@@ -115,10 +115,10 @@ const InstallPage = () => {
                   deferredPrompt,
                   setShowInstallPrompt,
                   setShowLogin,
-                  setDeferredPrompt
+                  setDeferredPrompt,
+                  setIsInstallButtonClicked
                 );
                 setIsInstallButtonClicked(true);
-                // setIsClicked(true);
               }}
               size="large"
             >
@@ -136,7 +136,6 @@ const InstallPage = () => {
               sx={{
                 color: 'white',
                 backgroundColor: '#5A9EEE',
-
                 ':hover': { backgroundColor: '#5A9EEE', color: 'white' },
               }}
               onClick={handleLogin}
