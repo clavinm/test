@@ -38,6 +38,40 @@ export default defineConfig({
             purpose: 'maskable',
           },
         ],
+        description:
+          'Pwa Setup Project Where you can send notifications and also click pictures record vedio and install the application in the mobile devices',
+        screenshots: [
+          {
+            src: 's4.png',
+            type: 'image/png',
+            sizes: '720x540',
+            form_factor: 'wide',
+          },
+          {
+            src: 's4a.png',
+            type: 'image/png',
+            sizes: '720x540',
+            form_factor: 'wide',
+          },
+          {
+            src: 's1a.png',
+            type: 'image/png',
+            sizes: '540x720',
+            form_factor: 'narrow',
+          },
+          {
+            src: 's2a.png',
+            type: 'image/png',
+            sizes: '540x720',
+            form_factor: 'narrow',
+          },
+          {
+            src: 's3a.png',
+            type: 'image/png',
+            sizes: '540x720',
+            form_factor: 'narrow',
+          },
+        ],
       },
     }),
   ],
