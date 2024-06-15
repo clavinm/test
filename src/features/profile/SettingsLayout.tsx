@@ -1,12 +1,16 @@
+// src/components/SettingsLayout.tsx
 import { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import Modal from '../../components/Modal';
 import Logout from './Logout';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import ViewAgendaOutlinedIcon from '@mui/icons-material/ViewAgendaOutlined';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
+import { Button } from '@mui/material';
+import Row from '../../components/Row';
+import { useUser } from '../../context/userContext';
 
 const Profile = styled.div`
   position: relative;
@@ -32,14 +36,15 @@ const Profile = styled.div`
   @media (max-width: 350px) {
     width: 100px;
     height: 80px;
-    border-radius: 50%; /* Adjusted for a perfect circle */
+    border-radius: 50%;
   }
 
   @media (max-width: 320px) {
     width: 100px;
     height: 84px;
-    border-radius: 50%; /* Adjusted for a perfect circle */
-  }`;
+    border-radius: 50%; 
+  }
+`;
 
 const CameraIcon = styled.label`
   position: absolute;
@@ -76,17 +81,10 @@ const CompanyName = styled.div`
   font-size: 15px;
   font-weight: bold;
   padding: 49px;
-  text-align:left;
+  text-align: left;
 `;
 
-const Menu = styled.ul`
-  list-style: none;
-  padding: 20px;
-  line-height: 4;
- 
-`;
-
-const MenuItem = styled.li`
+const MenuItem = styled.div`
   padding: 2px;
   display: flex;
   align-items: center;
@@ -94,10 +92,13 @@ const MenuItem = styled.li`
   font-size: 15px;
 `;
 
+
 function SettingsLayout() {
-  const companyName = 'Company name';
-  const profileLetter = companyName.charAt(0);
+  const companyname = 'Company name'; 
+  const profileLetter = companyname.charAt(0);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { user } = useUser();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file: File | null = event.target.files ? event.target.files[0] : null;
@@ -114,64 +115,73 @@ function SettingsLayout() {
 
   return (
     <>
-        <Logo>
-          <Profile>
-            {profileImage ? (
-              <img src={profileImage} alt="Profile" />
-            ) : (
-              profileLetter
-            )}
-            <CameraIcon>
-              <CameraAltOutlinedIcon />
-            </CameraIcon>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              style={{
-                opacity: 0,
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                left: 0,
-                top: 0,
-                cursor: 'pointer',
-              }}
-            />
-          </Profile>
-          <Link to="/companyinfo">
+      <Logo>
+        <Profile>
+          {profileImage ? (
+            <img src={profileImage} alt="Profile" />
+          ) : (
+            profileLetter
+          )}
+          <CameraIcon>
+            <CameraAltOutlinedIcon />
+          </CameraIcon>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            style={{
+              opacity: 0,
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              left: 0,
+              top: 0,
+              cursor: 'pointer',
+            }}
+          />
+        </Profile>
+        <Button
+          sx={{ color: '#000' }}
+          onClick={() => navigate({ to: '/companyinfo' })}
+        >
+          <CompanyName>{user ? user?.companyName : companyname}</CompanyName>
+        </Button>
+      </Logo>
+      <Row type="vertical" style={{ marginLeft: 15, cursor: 'pointer' }}>
+        <Row onClick={() => navigate({ to: '/appointmentinfo' })}>
+          <Button sx={{ color: '#000', textTransform: 'none' }}>
+            <MenuItem>
+              <ViewAgendaOutlinedIcon sx={{ fontSize: 20 }} />
+              Appointments
+            </MenuItem>
+          </Button>
+        </Row>
+        <Row onClick={() => navigate({ to: '/payment' })}>
+          <Button sx={{ color: '#000', textTransform: 'none' }}>
+            <MenuItem>
+              <AccountBalanceWalletOutlinedIcon sx={{ fontSize: 20 }} />
+              Payment Info
+            </MenuItem>
+          </Button>
+        </Row>
 
-          <CompanyName>{companyName}</CompanyName>
-          </Link>
-        </Logo>
-      <Menu>
-        <MenuItem>
-          <ViewAgendaOutlinedIcon sx={{ fontSize: 20 }} />
-          <Link to={'/appointmentinfo'}>
-          <span>Appointments</span>
-          </Link>
-        </MenuItem>
-        <MenuItem>
-          <AccountBalanceWalletOutlinedIcon sx={{ fontSize: 20 }}/>
-          <Link to="/payment">
-            <span>Payment Info</span>
-          </Link>
-        </MenuItem>
+        <Modal>
+          <Modal.Open opens="logout">
+            <Row>
+              <Button sx={{ color: '#000', textTransform: 'none' }}>
+                <MenuItem>
+                  <LogoutRoundedIcon sx={{ fontSize: 20 }} />
+                  Logout
+                </MenuItem>
+              </Button>
+            </Row>
+          </Modal.Open>
 
-        <MenuItem>
-          <LogoutRoundedIcon sx={{ fontSize: 20 }}/>
-          <Modal>
-            <div>
-              <Modal.Open opens="logout">
-                <span>Logout</span>
-              </Modal.Open>
-            </div>
-            <Modal.Window name="logout">
-              <Logout />
-            </Modal.Window>
-          </Modal>
-        </MenuItem>
-      </Menu>
+          <Modal.Window name="logout">
+            <Logout />
+          </Modal.Window>
+        </Modal>
+      </Row>
     </>
   );
 }

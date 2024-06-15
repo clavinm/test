@@ -98,7 +98,7 @@ export default function CopySlots() {
                 },
               }}
             >
-              <IoSaveOutline onClick={() => console.log('Save clicked')} />
+              <IoSaveOutline />
             </IconButton>
             <IconButton
               aria-label="edit"
@@ -109,9 +109,10 @@ export default function CopySlots() {
                   background: 'none',
                 },
               }}
+              onClick={handleCancel}
             >
               {' '}
-              <IoClose onClick={handleCancel} />
+              <IoClose />
             </IconButton>
           </ButtonContainer>
         )}

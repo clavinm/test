@@ -5,7 +5,9 @@ import { useMediaQuery } from '@mui/material';
 import UserAvatar from '../components/UserAvatar';
 import { BiEditAlt } from 'react-icons/bi';
 import styled from 'styled-components';
-
+import { useEffect, useState } from 'react';
+import { displayContacts } from '../services/realmServices';
+import { User } from '../services/types';
 const Icon = styled.div`
   cursor: pointer;
   margin-right: 10px;
@@ -26,12 +28,22 @@ const Icon = styled.div`
 
 function Contacts() {
   const isSmallScreen = useMediaQuery('(max-width: 350px)');
+  const [data,setData] = useState<User[]>([]);
   const navigate = useNavigate();
   const handleEditContact = () => {
     navigate({ to: '/editcontact' });
     // Redirect to the editcontact page
     // history.push('/editcontact');
   };
+  useEffect(()=>{
+    async function fetchContacts(){
+      const data = await displayContacts();
+      // console.log(data);
+      if(data === undefined) return;
+      setData(data);
+    }
+    fetchContacts();
+  })
   return (
     <>
       <Stack
@@ -61,8 +73,9 @@ function Contacts() {
           </Link>
         </Row>
       </Stack>
-      <Row style={{ marginLeft: 15 }}>
-        <UserAvatar />
+      {data.map((contact) => (
+      <Row style={{ marginLeft: 15,marginBottom:-20 }}>
+        <UserAvatar name={contact.name} mobile={contact.mobile}/>
         <Row $contentposition="right">
           <IconButton
             aria-label="edit"
@@ -80,6 +93,7 @@ function Contacts() {
           </IconButton>
         </Row>
       </Row>
+      ))}
     </>
   );
 }

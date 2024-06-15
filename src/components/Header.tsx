@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { IoArrowBack } from 'react-icons/io5';
 import { useLocation, useNavigate } from '@tanstack/react-router';
@@ -10,8 +10,9 @@ import { styled as muiStyled } from '@mui/material/styles';
 import RouteTitle from './RouteTitle';
 import { useMoveBack } from '../hooks/useMoveBack';
 import QrCodeRoundedIcon from '@mui/icons-material/QrCodeRounded';
-import { useState } from 'react';
 import { IconButton } from '@mui/material';
+import ChatHeader from './ChatHeader';
+import Row from './Row';
 
 const TitleContainer = styled.div`
   display: flex;
@@ -57,13 +58,6 @@ const HeaderContainer = styled.div`
   flex-direction: column;
   width: 100%;
   margin-top: 10px;
-`;
-
-const TopRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
 `;
 
 const BottomRow = styled.div`
@@ -125,6 +119,7 @@ const Header: React.FC = () => {
   const routeName = formatRouteTitle(location.pathname);
   const moveBack = useMoveBack();
   const [searchQuery, setSearchQuery] = useState('');
+  const previousLocation = useRef(location.pathname);
 
   const shouldShowBackButton = ![
     '/appointments',
@@ -137,26 +132,33 @@ const Header: React.FC = () => {
     navigate({ to: '/qrscanner' });
   };
   const moveBackAndClearSearch = () => {
-    moveBack();
+    navigate({ to: previousLocation.current });
     setSearchQuery('');
-  };
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    navigate({ to: `/search?query=${searchQuery}` });
   };
 
   const isSearchPage = location.pathname === '/search';
+
+  useEffect(() => {
+    if (!isSearchPage) {
+      previousLocation.current = location.pathname;
+    }
+  }, [isSearchPage, location.pathname]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchQuery) {
+        navigate({ to: `/search?query=${searchQuery}` });
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, navigate]);
 
   return (
     <CustomAppBar position="static" color="transparent">
       <Toolbar>
         <HeaderContainer>
           {!isSearchPage && (
-            <TopRow>
+            <Row>
               <TitleContainer>
                 {shouldShowBackButton && (
                   <IconButton
@@ -176,43 +178,66 @@ const Header: React.FC = () => {
                 )}
                 <Title>{routeName || 'Appointments'}</Title>
               </TitleContainer>
-              <IconButton
-                aria-label="edit"
-                size="small"
-                sx={{
-                  color: 'black',
-                  ':hover': {
-                    background: 'none',
-                  },
-                }}
-                onClick={handleQrButton}
-              >
-                <QrButton>
-                  <QrCodeRoundedIcon fontSize="inherit" />
-                </QrButton>
-              </IconButton>
-            </TopRow>
-          )}
-          <BottomRow>
-            <Form onSubmit={handleSearchSubmit}>
-              <Search>
-                <SearchIconWrapper
-                  onClick={isSearchPage ? moveBackAndClearSearch : undefined}
+              <Row $contentposition="right">
+                <IconButton
+                  aria-label="edit"
+                  size="large"
+                  sx={{
+                    color: 'black',
+                    ':hover': {
+                      background: 'none',
+                    },
+                  }}
                 >
-                  {isSearchPage ? <IoArrowBack /> : <SearchIcon />}
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search…"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
-            </Form>
-          </BottomRow>
+                  {routeName === 'Chatpage' && (
+                    
+                      <ChatHeader />
+                    
+                  )}
+                </IconButton>
+
+                <IconButton
+                  aria-label="edit"
+                  size="small"
+                  sx={{
+                    color: 'black',
+                    ':hover': {
+                      background: 'none',
+                    },
+                  }}
+                  onClick={handleQrButton}
+                >
+                  <QrButton>
+                    <QrCodeRoundedIcon fontSize="inherit" />
+                  </QrButton>
+                </IconButton>
+              </Row>
+            </Row>
+          )}
+
+          {routeName !== 'Chatpage' && (
+            <BottomRow>
+              <Form>
+                <Search>
+                  <SearchIconWrapper
+                    onClick={isSearchPage ? moveBackAndClearSearch : undefined}
+                  >
+                    {isSearchPage ? <IoArrowBack /> : <SearchIcon />}
+                  </SearchIconWrapper>
+                  <StyledInputBase
+                    placeholder="Search…"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    inputProps={{ 'aria-label': 'search' }}
+                  />
+                </Search>
+              </Form>
+            </BottomRow>
+          )}
         </HeaderContainer>
         <RouteTitle />
       </Toolbar>
+     
     </CustomAppBar>
   );
 };

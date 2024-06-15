@@ -49,20 +49,6 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         <Row $contentposition="center" size="xLarge">
           <Stack spacing={3} direction="row">
             <Button
-              onClick={closeModal}
-              variant="outlined"
-              sx={{
-                color: 'white',
-                backgroundColor: '#5A9EEE',
-                fontWeight: 'bold',
-                borderRadius: '11px',
-
-                ':hover': { backgroundColor: '#5A9EEE', color: 'white' },
-              }}
-            >
-              {isLoading ? '' : cancelText}
-            </Button>
-            <Button
               onClick={onConfirm}
               variant="outlined"
               sx={{
@@ -75,6 +61,21 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
               disabled={isLoading || confirmDisabled}
             >
               {isLoading ? '' : confirmText}
+            </Button>
+
+            <Button
+              onClick={closeModal}
+              variant="outlined"
+              sx={{
+                color: 'white',
+                backgroundColor: '#5A9EEE',
+                fontWeight: 'bold',
+                borderRadius: '11px',
+
+                ':hover': { backgroundColor: '#5A9EEE', color: 'white' },
+              }}
+            >
+              {isLoading ? '' : cancelText}
             </Button>
           </Stack>
         </Row>

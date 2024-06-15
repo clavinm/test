@@ -9,6 +9,7 @@ import { IconButton } from '@mui/material';
 
 interface Slot {
   id: number;
+  ObjectID: string;
   time: string;
   isDirty: boolean;
   people: number;
@@ -21,7 +22,7 @@ interface SlotCardProps {
   handleTimeChange: (id: number, value: string) => void;
   handlePeopleChange: (id: number, value: number) => void;
   saveSlot: (id: number) => void;
-  handleDeleteSlot: (id: number) => void;
+  handleDeleteSlot: (id: string) => void;
 }
 
 const SlotCard1 = styled.div`
@@ -115,9 +116,9 @@ export default function SlotCard({
               <Modal.Window name="Delete-slot">
                 <ConfirmationDialog
                   title="Confirm Delete"
-                  confirmText="Yes"
                   cancelText="No"
-                  onConfirm={() => handleDeleteSlot(slot.id)}
+                  confirmText="Yes"
+                  onConfirm={() => handleDeleteSlot(slot.ObjectID)}
                   closeModal={closeModal}
                 >
                   <p>Are you sure you want to delete the slot?</p>

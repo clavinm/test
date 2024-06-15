@@ -14,8 +14,7 @@ import Contacts from './pages/Contacts'; //
 import PageNotFound from './components/PageNotFound';
 import SearchResults from './components/SearchResults';
 import AppointmentInfo from './features/appointment/AppointmentInfo';
-import ChatPage from './pages/ChatPage';
-// import EditContact from './features/contact/EditContact';
+import Chat from './pages/ChatPage';
 
 const rootRoute = createRootRoute({
   component: Root,
@@ -100,13 +99,14 @@ const appointmentinfoRoute = createRoute({
 const chatpageRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/chatpage',
-  component: ChatPage,
+  component: Chat,
 });
 const pageNotFoundRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/*',
   component: PageNotFound,
 });
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   qrRoute,

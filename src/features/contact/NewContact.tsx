@@ -2,8 +2,10 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import styled from 'styled-components';
 import Input from '../../components/Input'; // Importing your custom Input component
 import Row from '../../components/Row';
-import { useLocation,Link } from '@tanstack/react-router';
+import { useLocation, useNavigate} from '@tanstack/react-router';
 import { Button } from '@mui/material';
+import { createUser } from '../../services/realmServices';
+
 
 interface FormData {
   name: string;
@@ -26,6 +28,7 @@ const Content = styled.div`
 `;
 
 export default function NewContact() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     phone: '',
@@ -56,6 +59,11 @@ export default function NewContact() {
     // Save the formData to your backend or storage mechanism
     // After successful save, you can redirect to another page
     // For example, redirect to the editcontact page
+  
+    console.log("user...12345",formData);
+    createUser(formData);
+    navigate({to: '/createAppointment'})
+    
   };
 
   return (
@@ -75,7 +83,7 @@ export default function NewContact() {
           value={formData.phone}
           onChange={handleChange}
           label="Phone Number"
-          required
+         
         />
         <Content>
           <Row type="vertical">
@@ -87,7 +95,7 @@ export default function NewContact() {
                 label="Male"
                 value="male"
                 onChange={handleChange}
-                required
+              
               />
               <Input
                 type="radio"
@@ -95,7 +103,7 @@ export default function NewContact() {
                 label="Female"
                 value="female"
                 onChange={handleChange}
-                required
+          
               />
             </Row>
           </Row>
@@ -136,8 +144,9 @@ export default function NewContact() {
           label="Pin Code"
         />
         <Row $contentposition='center'>
-          <Link to={'/createAppointment'}>
+          {/* <Link to={'/createAppointment'}> */}
             <Button variant="outlined"
+            type="submit"
           sx={{
             color: 'white',
             backgroundColor: '#5A9EEE',
@@ -149,7 +158,7 @@ export default function NewContact() {
             height:'45px',
             ':hover': { backgroundColor: '#5A9EEE', color: 'white' },
           }}>{isEditContact ? 'Save' : 'Next'}</Button>
-          </Link>
+          {/* </Link> */}
         </Row>
       </form>
     </Container>

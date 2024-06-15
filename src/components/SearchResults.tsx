@@ -6,9 +6,11 @@ import styled from 'styled-components';
 import UserAvatar from './UserAvatar';
 import Row from './Row';
 import { Button } from '@mui/material';
+import { searchUser } from '../services/realmServices';
+import {User} from '../services/types';
 
 const Container = styled.div`
-  padding: 20px;
+  padding: 15px;
 `;
 
 const NoResults = styled.div`
@@ -48,20 +50,11 @@ export interface Item {
   };
 }
 
-const initialItems: Item[] = [
-  {
-    id: 1,
-    text: {
-      Token: 'Token No: 1',
-      Slot: <UserAvatar />,
-    },
-  },
-];
 
 const SearchResults: React.FC = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search).get('query') || '';
-  const [results, setResults] = useState<Item[]>([]);
+  const [results, setResults] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -70,19 +63,18 @@ const SearchResults: React.FC = () => {
   };
 
   useEffect(() => {
+   
+   
     // Simulate an API call
     const fetchData = async () => {
       setIsLoading(true);
-      // Replace this with actual API call
-      const response = await new Promise<Item[]>((resolve) => {
-        setTimeout(() => {
-          const data = initialItems.filter((item) =>
-            item.text.Token.toLowerCase().includes(query.toLowerCase())
-          );
-          resolve(data);
-        }, 1000);
-      });
+      const data = await searchUser(query);
+      if(data === null) return; 
+      const response = data;
+      if (response === undefined) return;
       setResults(response);
+      console.log('🚀🚀🚀🚀',data);
+      
       setIsLoading(false);
     };
 
@@ -93,10 +85,11 @@ const SearchResults: React.FC = () => {
     <Container>
       {isLoading ? (
         <p>Loading...</p>
-      ) : results.length > 0 ? (
-        results.map((result) => (
-          <Row $contentposition="left" key={result.id}>
-            <p>{result.text.Slot}</p>
+      ) : 
+      results.length > 0 ? (
+        results.map((result,index) => (
+          <Row $contentposition="left" key={index} style={{marginBottom:20}}>
+            <UserAvatar name={result.name} mobile={result.phone} />
           </Row>
         ))
       ) : (

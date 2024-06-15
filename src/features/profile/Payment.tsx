@@ -1,4 +1,3 @@
-
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
@@ -9,7 +8,8 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import Row from '../../components/Row';
 import Modal, { ModalContext } from '../../components/Modal';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
-
+import { useUser } from '../../context/userContext';
+import toast from 'react-hot-toast';
 
 const PaymentInfoContainer = styled.div`
   margin: 1rem 0;
@@ -28,7 +28,7 @@ const UpiIdContainer = styled.div`
 const NewUpiIdContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content:start;
+  justify-content: start;
   margin-top: 0.05;
   margin-left: 2rem;
 `;
@@ -51,12 +51,12 @@ const InputContainer = styled.div`
   justify-content: center;
 `;
 
-
 const PaymentInfo = () => {
   const [upiIds, setUpiIds] = useState(['Example@okicici']);
   const [newUpiId, setNewUpiId] = useState('');
   const [showInput, setShowInput] = useState(false);
-  const {closeModal} = useContext(ModalContext);
+  const { closeModal } = useContext(ModalContext);
+  const { user } = useUser();
 
   const handleAddClick = () => {
     setShowInput(true);
@@ -66,6 +66,7 @@ const PaymentInfo = () => {
     if (newUpiId.trim() !== '') {
       setUpiIds([...upiIds, newUpiId]);
       setNewUpiId('');
+      toast.success('UPI ID added successfully');
       setShowInput(false);
     }
   };
@@ -74,7 +75,8 @@ const PaymentInfo = () => {
     const updatedUpiIds = [...upiIds];
     updatedUpiIds.splice(index, 1);
     setUpiIds(updatedUpiIds);
-      closeModal();
+    closeModal();
+    toast.success('UPI ID deleted successfully');
   };
 
   const handleCancel = () => {
@@ -84,39 +86,40 @@ const PaymentInfo = () => {
 
   return (
     <PaymentInfoContainer>
-      {upiIds.map((upiId, index) => (
-        <Row $contentposition="center">
-          <UpiIdContainer key={upiId}>
-            <InputContainer>
-              <Input
-                width="240px"
-                type="text"
-                label={`UPI ID ${index + 1}`}
-                value={upiId}
-                readOnly
-              />
-            </InputContainer>
-            <Modal>
-              <Modal.Open opens="Delete-UPI">
-                <IconContainer>
-                  <DeleteOutlineOutlinedIcon fontSize="large" />
-                </IconContainer>
-              </Modal.Open>
-              <Modal.Window name="Delete-UPI">
-                <ConfirmationDialog
-                  title="Confirm Delete"
-                  confirmText="Yes"
-                  cancelText="No"
-                  onConfirm={() => handleDeleteUpiId(index)}
-                  closeModal={closeModal}
-                >
-                  <p>Are you sure you want to delete the UPI ID?</p>
-                </ConfirmationDialog>
-              </Modal.Window>
-            </Modal>
-          </UpiIdContainer>
-        </Row>
-      ))}
+      {user &&
+        user.upiId.map((upiId, index) => (
+          <Row $contentposition="center">
+            <UpiIdContainer key={upiId}>
+              <InputContainer>
+                <Input
+                  width="240px"
+                  type="text"
+                  label={`UPI ID ${index + 1}`}
+                  value={upiId}
+                  readOnly
+                />
+              </InputContainer>
+              <Modal>
+                <Modal.Open opens="Delete-UPI">
+                  <IconContainer>
+                    <DeleteOutlineOutlinedIcon fontSize="large" />
+                  </IconContainer>
+                </Modal.Open>
+                <Modal.Window name="Delete-UPI">
+                  <ConfirmationDialog
+                    title="Confirm Delete"
+                    confirmText="Yes"
+                    cancelText="No"
+                    onConfirm={() => handleDeleteUpiId(index)}
+                    closeModal={closeModal}
+                  >
+                    <p>Are you sure you want to delete the UPI ID?</p>
+                  </ConfirmationDialog>
+                </Modal.Window>
+              </Modal>
+            </UpiIdContainer>
+          </Row>
+        ))}
       {showInput ? (
         <Row $contentposition="center">
           <NewUpiIdContainer>

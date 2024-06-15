@@ -1,19 +1,30 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+// vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
-// https://vitejs.dev/config/
+
 export default defineConfig({
   plugins: [
     react(),
     TanStackRouterVite(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      includeAssets: [
+        'favicon.ico',
+        'apple-touch-icon.png',
+        'mask-icon.svg',
+        'safari-pinned-tab.svg',
+      ],
       manifest: {
-        name: 'Vite PWA Project',
-        short_name: 'Vite PWA Project',
+        name: 'Appointment System for Clinics',
+        short_name: 'Appointments',
+
         theme_color: '#ffffff',
+        background_color: '#ffffff',
+        start_url: '/',
+        display: 'standalone',
+
         icons: [
           {
             src: 'pwa-64x64.png',
@@ -24,6 +35,7 @@ export default defineConfig({
             src: 'pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
+            purpose: 'any',
           },
           {
             src: 'pwa-512x512.png',
@@ -37,38 +49,43 @@ export default defineConfig({
             type: 'image/png',
             purpose: 'maskable',
           },
+          {
+            src: 'apple-touch-icon-180x180.png',
+            sizes: '180x180',
+            type: 'image/png',
+            purpose: 'any maskable',
+          },
         ],
-        description:
-          'Pwa Setup Project Where you can send notifications and also click pictures record vedio and install the application in the mobile devices',
-        screenshots: [
+          description:'HealthConnect simplifies doctor appointment scheduling with an easy-to-use platform. Book, reschedule, and cancel appointments effortlessly. Browse detailed profiles and reviews to find the best providers. Receive timely reminders, store medical records securely, and access telehealth services. Experience hassle-free healthcare with HealthConnect!',
+              screenshots: [
           {
-            src: 's4.png',
+            src: '1.png',
+            sizes: '640x480',
             type: 'image/png',
-            sizes: '720x540',
-            form_factor: 'wide',
-          },
-          {
-            src: 's4a.png',
-            type: 'image/png',
-            sizes: '720x540',
-            form_factor: 'wide',
-          },
-          {
-            src: 's1a.png',
-            type: 'image/png',
-            sizes: '540x720',
             form_factor: 'narrow',
           },
           {
-            src: 's2a.png',
+            src: '2.png',
+            sizes: '640x480',
             type: 'image/png',
-            sizes: '540x720',
             form_factor: 'narrow',
           },
           {
-            src: 's3a.png',
+            src: '3.png',
+            sizes: '640x480',
             type: 'image/png',
-            sizes: '540x720',
+            form_factor: 'narrow',
+          },
+          {
+            src: '4.png',
+            sizes: '640x480',
+            type: 'image/png',
+            form_factor: 'narrow',
+          },
+          {
+            src: '5.png',
+            sizes: '640x480',
+            type: 'image/png',
             form_factor: 'narrow',
           },
         ],

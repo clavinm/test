@@ -1,16 +1,18 @@
 import styled from 'styled-components';
 import Row from './Row';
-import React from 'react';
 import { Avatar } from '@mui/material';
 
 interface UserAvatarProps {
-  marginTop?: string;
+  name: string;
+  mobile: string;
 }
 
+
 const Content = styled.div`
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
   color: #000;
+  text-transform:none;
   line-height: 16.1px;
 
   @media (max-width: 768px) {
@@ -22,12 +24,13 @@ const Content = styled.div`
   }
 `;
 
-const Content1 = styled.div<UserAvatarProps>`
-  font-size: 18px;
+const Content1 = styled.div`
+  font-size: 15px;
   font-weight: 400;
   color: #000;
+  text-transform:none;
   line-height: 30px;
-  margin-top: ${(props) => props.marginTop || '0px'};
+  margin-top: -15px;
   @media (max-width: 768px) {
     font-size: 18px;
   }
@@ -37,7 +40,10 @@ const Content1 = styled.div<UserAvatarProps>`
   }
 `;
 
-const UserAvatar: React.FC<UserAvatarProps> = ({ marginTop }) => {
+const UserAvatar: React.FC<UserAvatarProps> = ({
+  name,
+  mobile,
+}) => {
   return (
     <Row type="horizontal" $contentposition="center">
       <Avatar
@@ -47,16 +53,17 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ marginTop }) => {
           border: '1px solid #D9D9D9',
           width: '52px',
           height: '52px',
+          
         }}
       >
-        J
+       J
       </Avatar>
       <Row type="vertical" $contentposition="spaceBetween" size="xsmall">
         <Row>
-          <Content1 marginTop={marginTop}>Jane Cooper</Content1>
+          <Content1>{name? name : 'Jane'}</Content1>
         </Row>
         <Row>
-          <Content>+91 9999999999</Content>
+          <Content>+91 {mobile}</Content>
         </Row>
       </Row>
     </Row>

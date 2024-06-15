@@ -1,6 +1,5 @@
-// InstallPage.tsx
 import { useState, useEffect } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+// import { useNavigate } from '@tanstack/react-router';
 import Input from '../components/Input';
 import styled from 'styled-components';
 import { Button } from '@mui/material';
@@ -10,7 +9,12 @@ import {
   handleBeforeInstallPrompt,
   handleAppInstalled,
   handleInstallClick,
-} from '../features/install/InstallPage'; // Ensure this path is correct
+} from '../features/install/InstallPage';
+// import * as Realm from 'realm-web';
+import Row from '../components/Row';
+import { useLoginApi } from '../services/useLoginApi';
+// import { app } from '../constants';
+// import { searchDoctors } from '../services/realmServices';
 
 const First = styled.div`
   background-color: lightgray;
@@ -51,22 +55,28 @@ const Note = styled.div`
   font-size: 16px;
   color: #000;
 `;
+// interface User {
+//   id?: string;
+// }
 
 const InstallPage = () => {
   const [showInstallPrompt, setShowInstallPrompt] = useState(true);
-  const [showLogin, setShowLogin] = useState(false);
+  const [, setShowLogin] = useState(false);
   const [isInstallButtonClicked, setIsInstallButtonClicked] = useState(false);
-console.log(showLogin);
+  // const [isIos, setIsIos] = useState(false);
+  const [apiKey, setApikey] = useState('');
+  const { login } = useLoginApi();
 
-  const navigate = useNavigate();
   const [deferredPrompt, setDeferredPrompt] = useState<DeferredPrompt | null>(
     null
   );
 
   useEffect(() => {
+    // const userAgent = window.navigator.userAgent.toLowerCase();
+    // setIsIos(/iphone|ipad|ipod/.test(userAgent));
+
     const beforeInstallPromptHandler = (e: Event) =>
       handleBeforeInstallPrompt(e, setDeferredPrompt, setShowInstallPrompt);
-
     const appInstalledHandler = () => handleAppInstalled(setShowInstallPrompt);
 
     window.addEventListener('beforeinstallprompt', beforeInstallPromptHandler);
@@ -81,10 +91,11 @@ console.log(showLogin);
     };
   }, []);
 
-  const handleLogin = () => {
-    navigate({ to: '/appointments' });
+  const handleLogin = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    console.log(apiKey);
+    login(apiKey);
   };
-
   return (
     <>
       <First>
@@ -93,7 +104,7 @@ console.log(showLogin);
       </First>
       <Second>
         {showInstallPrompt && (
-          <>
+          <div>
             <LoadingButton
               variant="outlined"
               loading={isInstallButtonClicked}
@@ -125,24 +136,38 @@ console.log(showLogin);
               Install Now
             </LoadingButton>
             <Note>Note: To proceed please install first</Note>
-          </>
+          </div>
         )}
 
         {!showInstallPrompt && (
-          <>
-            <Input label="key" placeholder="Enter the key" />
-            <Button
-              variant="outlined"
-              sx={{
-                color: 'white',
-                backgroundColor: '#5A9EEE',
-                ':hover': { backgroundColor: '#5A9EEE', color: 'white' },
-              }}
-              onClick={handleLogin}
-            >
-              LOGIN
-            </Button>
-          </>
+          <div>
+            <form onSubmit={handleLogin}>
+              <Row $contentposition="center">
+                <Input
+                  label="key"
+                  name="apiKey"
+                  placeholder="Enter the key"
+                  value={apiKey}
+                  onChange={(e) => setApikey(e.target.value)}
+                />
+              </Row>
+              <Row $contentposition="center">
+                <Button
+                  type="submit"
+                  variant="outlined"
+                  sx={{
+                    color: 'white',
+                    backgroundColor: '#5A9EEE',
+
+                    ':hover': { backgroundColor: '#5A9EEE', color: 'white' },
+                  }}
+                  // onClick={handleLogin}
+                >
+                  LOGIN
+                </Button>
+              </Row>
+            </form>
+          </div>
         )}
       </Second>
     </>

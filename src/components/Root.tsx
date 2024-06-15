@@ -1,8 +1,9 @@
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useLocation } from '@tanstack/react-router';
+// import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import styled from 'styled-components';
 import Footer from './Footer';
 import Header from './Header';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import InstallPage from '../pages/InstallPage';
 
 const StyledAppLayout = styled.div`
   width: 425px;
@@ -32,18 +33,26 @@ const Container = styled.div`
   flex-direction: column;
   gap: 3.2rem;
 `;
-
 export const Root = () => {
+  const Auth = localStorage.getItem('userid');
+  const location = useLocation();
+
+  const showHeaderFooter = [
+    '/appointments',
+    '/notes',
+    '/settings',
+    
+    '/',
+  ].includes(location.pathname);
+  // const hideHeader = location.pathname === '/chatpage';
   return (
     <StyledAppLayout>
-      <Header />
+      {Auth && <Header />}
       <Main>
-        <Container>
-          <Outlet />
-        </Container>
+        <Container>{!Auth ? <InstallPage /> : <Outlet />}</Container>
       </Main>
-      <Footer />
-      <TanStackRouterDevtools position="top-right" />
+      {Auth && showHeaderFooter && <Footer />}
+      {/* <TanStackRouterDevtools position="top-right" /> */}
     </StyledAppLayout>
   );
 };

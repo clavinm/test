@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Row from './Row';
 import { Avatar } from '@mui/material';
+// import { blue } from '@mui/material/colors';
 
 const Content = styled.div`
   font-size: 14px;
@@ -8,11 +9,7 @@ const Content = styled.div`
   color: #000;
   line-height: 16.1px;
 
-  @media (max-width: 768px) {
-    font-size: 14px;
-  }
-
-  @media (max-width: 480px) {
+  @media (max-width: 380px) {
     font-size: 12px;
   }
 `;
@@ -23,11 +20,7 @@ const Content1 = styled.div`
   color: #000;
   line-height: 30px;
 
-  @media (max-width: 768px) {
-    font-size: 18px;
-  }
-
-  @media (max-width: 480px) {
+  @media (max-width: 380px) {
     font-size: 16px;
   }
 `;
@@ -42,7 +35,11 @@ interface UserAvatarProps {
 
 export default function AppointmentAvatar({ data }: UserAvatarProps) {
   return (
-    <Row type="horizontal" $contentposition="center">
+    <Row
+      type="horizontal"
+      $contentposition="spaceBetween"
+      style={{ background: '', width: '100%' }}
+    >
       <Avatar
         sx={{
           bgcolor: '#fff',
@@ -50,6 +47,7 @@ export default function AppointmentAvatar({ data }: UserAvatarProps) {
           border: '1px solid #D9D9D9',
           width: '52px',
           height: '52px',
+          padding: '10px',
         }}
       >
         J
@@ -62,7 +60,7 @@ export default function AppointmentAvatar({ data }: UserAvatarProps) {
           <Content>+91 9999999999</Content>
         </Row>
       </Row>
-      <Row $contentposition="center" style={{ marginLeft: 20 }}>
+      <Row $contentposition="center">
         <Row type="vertical" size="small" style={{ fontSize: 12 }}>
           <Row>{data.Token}</Row>
           <Row>{data.Slot}</Row>
